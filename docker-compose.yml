@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cltbot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cltbot}
+      POSTGRES_DB: ${POSTGRES_DB:-cltbot}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cltbot} -d ${POSTGRES_DB:-cltbot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Defina SECRET_KEY no ficheiro .env (ver .env.example)}
+      DEBUG: ${DEBUG:-True}
+      DATABASE_URL: postgres://${POSTGRES_USER:-cltbot}:${POSTGRES_PASSWORD:-cltbot}@postgres:5432/${POSTGRES_DB:-cltbot}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-backend,localhost,127.0.0.1}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN:?Defina DISCORD_TOKEN no .env}
+      GUILD_ID: ${GUILD_ID:?Defina GUILD_ID no .env}
+      VERIFIED_ROLE_ID: ${VERIFIED_ROLE_ID:?Defina VERIFIED_ROLE_ID no .env}
+      VERIFICATION_CHANNEL_ID: ${VERIFICATION_CHANNEL_ID:?Defina VERIFICATION_CHANNEL_ID no .env}
+      BOLAO_CHANNEL_ID: ${BOLAO_CHANNEL_ID:?Defina BOLAO_CHANNEL_ID no .env}
+      VERIFICATION_BULLET: ${VERIFICATION_BULLET:-🔹}
+      ADMIN_ROLE_ID: ${ADMIN_ROLE_ID:-}
+      BOLAO_ADMIN_ROLE_IDS: ${BOLAO_ADMIN_ROLE_IDS:-}
+      API_BASE_URL: http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

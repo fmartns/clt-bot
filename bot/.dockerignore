@@ -1,0 +1,11 @@
+.env
+.env.*
+__pycache__
+*.py[cod]
+.git
+.gitignore
+cltbot/verification/verification_message.json
+cltbot/verification/verification_ephemeral_ids.json
+.pytest_cache
+Dockerfile
+.dockerignore

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "cltbot-discord"
+version = "0.1.0"
+description = "Discord bot for Habbo verification (CLTbot)"
+authors = ["Filipe <fmartns66@gmail.com>"]
+packages = [{include = "cltbot"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<4"
+"discord.py" = "^2.4.0"
+httpx = "^0.28.0"
+python-dotenv = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+cltbot-discord = "cltbot.__main__:run"

@@ -1,0 +1,44 @@
+# Ambiente
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Django
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+
+# Bot (estado local)
+bot/cltbot/verification/verification_message.json
+bot/cltbot/verification/verification_ephemeral_ids.json
+bot/cltbot/bolao_state.json
+
+# Ferramentas
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Docker
+.docker/
